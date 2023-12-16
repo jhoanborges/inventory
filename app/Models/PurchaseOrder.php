@@ -25,4 +25,9 @@ class PurchaseOrder extends Model
         return $this->belongsToMany(Product::class )->using(PurcharseOrderProducts::class);
     }
 
+    public function status(): HasOne
+    {
+        return $this->hasOne(Status::class , 'id');
+    }
+
 }

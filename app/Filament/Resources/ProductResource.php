@@ -18,6 +18,7 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextEntry;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ViewColumn;
 
 class ProductResource extends Resource
 {
@@ -30,7 +31,7 @@ class ProductResource extends Resource
             ->schema([
                 TextInput::make('name')->required(),
                 TextInput::make('sku'),
-                RichEditor::make('description'),
+                RichEditor::make('description')->placeholder('No description.'),
                 RichEditor::make('notes'),
                 FileUpload::make('image')
                     ->image()
@@ -49,10 +50,18 @@ class ProductResource extends Resource
         return $table
             ->columns([
                 ImageColumn::make('image'),
+                ViewColumn::make('barcode')->view('partials.barcode')
+                ->toggleable(isToggledHiddenByDefault: false),
                 TextColumn::make('name')
                 ->searchable()
                 ->sortable(),
+                TextColumn::make('description')
+                ->toggleable(isToggledHiddenByDefault: true)
+                ->searchable()
+                ->sortable(),
             ])
+            ->persistSearchInSession()
+            ->persistColumnSearchesInSession()
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
             ])

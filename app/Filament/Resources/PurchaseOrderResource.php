@@ -22,6 +22,9 @@ use Filament\Forms\Components\Select;
 use App\Models\Customer;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\TimePicker;
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\CheckboxColumn;
 
 class PurchaseOrderResource extends Resource
 {
@@ -57,6 +60,30 @@ class PurchaseOrderResource extends Resource
                 TextColumn::make('customer.name')
                     ->searchable()
                     ->sortable(),
+                CheckboxColumn::make('is_approved')
+                ->beforeStateUpdated(function ($record, $state) {
+                    // Runs before the state is saved to the database.
+                })
+                ->afterStateUpdated(function ($record, $state) {
+                    // Runs after the state is saved to the database.
+                })
+/*
+                IconColumn::make('status_id')
+                ->label('Status')
+                ->tooltip(fn (PurchaseOrder $record): string => "Currently in: {$record->status->name}")
+                    ->icon(fn (string $state): string => match ($state) {
+                        '1' => 'clarity-success-standard-solid',
+                        '2' => 'heroicon-o-clock',
+                        '3' => 'heroicon-o-check-circle',
+                        '4' => 'heroicon-o-check-circle',
+                    })
+                    ->color(fn (string $state): string => match ($state) {
+                        '3' => 'info',
+                        '2' => 'warning',
+                        '1' => 'success',
+                        default => 'gray',
+                    })
+                    */
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),

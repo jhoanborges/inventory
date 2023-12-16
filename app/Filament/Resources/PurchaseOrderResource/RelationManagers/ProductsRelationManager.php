@@ -10,6 +10,8 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Tables\Actions\AttachAction;
+use App\Filament\Imports\ProductImporter;
+use Filament\Tables\Actions\ImportAction;
 
 class ProductsRelationManager extends RelationManager
 {
@@ -41,6 +43,8 @@ class ProductsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
+                ImportAction::make()
+                ->importer(ProductImporter::class),
                 //Tables\Actions\CreateAction::make(),
                 AttachAction::make()->preloadRecordSelect()
                 ->recordSelectSearchColumns(['name', 'sku'])
