@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\PurchaseOrderResource\RelationManagers;
+namespace App\Filament\Resources\ProductResource\RelationManagers;
 
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -9,20 +9,16 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Filament\Tables\Actions\AttachAction;
 
-class ProductsRelationManager extends RelationManager
+class PurchaseOrdersRelationManager extends RelationManager
 {
-    protected static string $relationship = 'products';
+    protected static string $relationship = 'purchaseOrders';
 
     public function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('purchase_order_id')
-                    ->required()
-                    ->maxLength(255),
-                    Forms\Components\TextInput::make('product_id')
+                Forms\Components\TextInput::make('id')
                     ->required()
                     ->maxLength(255),
             ]);
@@ -35,26 +31,26 @@ class ProductsRelationManager extends RelationManager
             ->columns([
                 Tables\Columns\TextColumn::make('id'),
                 Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('sku'),
+                Tables\Columns\TextColumn::make('reference'),
+                Tables\Columns\TextColumn::make('created_at'),
             ])
             ->filters([
                 //
             ])
             ->headerActions([
-                //Tables\Actions\CreateAction::make(),
-                AttachAction::make()->preloadRecordSelect()
-                ->recordSelectSearchColumns(['name', 'sku'])
+               // Tables\Actions\CreateAction::make(),
+                //Tables\Actions\AttachAction::make(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DetachAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                //Tables\Actions\EditAction::make(),
+                //Tables\Actions\DetachAction::make(),
+                //Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
+               /*Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DetachBulkAction::make(),
                     Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                ]),*/
             ]);
     }
 }

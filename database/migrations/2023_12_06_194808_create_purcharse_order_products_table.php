@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('purcharse_order_products', function (Blueprint $table) {
+        Schema::create('product_purchase_order', function (Blueprint $table) {
             $table->id();
             $table->foreignId('purchase_order_id')->constrained('purchase_orders');
             $table->foreignId('product_id')->constrained('products');
+            $table->datetime('deleted_at')->nullable();
             $table->timestamps();
         });
     }

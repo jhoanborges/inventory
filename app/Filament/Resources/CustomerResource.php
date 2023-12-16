@@ -14,12 +14,13 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\TextColumn;
 
 class CustomerResource extends Resource
 {
     protected static ?string $model = Customer::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'icomoon-user-tie';
 
     public static function form(Form $form): Form
     {
@@ -35,7 +36,15 @@ class CustomerResource extends Resource
     {
         return $table
             ->columns([
-
+                TextColumn::make('name')
+                ->searchable()
+                ->sortable(),
+                TextColumn::make('email')
+                ->searchable()
+                ->sortable(),
+                TextColumn::make('phone')
+                ->searchable()
+                ->sortable(),
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),

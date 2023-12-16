@@ -22,14 +22,14 @@ use Filament\Tables\Columns\TextColumn;
 class ProductResource extends Resource
 {
     protected static ?string $model = Product::class;
-
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'css-product-hunt';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 TextInput::make('name')->required(),
+                TextInput::make('sku'),
                 RichEditor::make('description'),
                 RichEditor::make('notes'),
                 FileUpload::make('image')
@@ -74,7 +74,8 @@ class ProductResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\PurchaseOrdersRelationManager::class,
+
         ];
     }
 

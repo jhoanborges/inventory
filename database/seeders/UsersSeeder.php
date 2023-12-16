@@ -16,7 +16,7 @@ class UsersSeeder extends Seeder
         User::create([
             'name' => 'jhoan',
             'password' => bcrypt('00000000'),
-            'email' => 'jhoan.borges@hexaguun.com'
+            'email' => 'jhoan.borges@hexagun.mx'
         ]);
     }
 }

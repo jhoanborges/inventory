@@ -5,9 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class PurchaseOrder extends Model
 {
@@ -18,9 +20,9 @@ class PurchaseOrder extends Model
     {
         return $this->belongsTo(Customer::class);
     }
-    public function products(): HasMany
+    public function products(): BelongsToMany
     {
-        return $this->hasMany(PurcharseOrderProducts::class,  'purchase_order_id', 'product_id');
+        return $this->belongsToMany(Product::class )->using(PurcharseOrderProducts::class);
     }
 
 }

@@ -26,8 +26,8 @@ use Filament\Forms\Components\TimePicker;
 class PurchaseOrderResource extends Resource
 {
     protected static ?string $model = PurchaseOrder::class;
-
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'Orders';
+    protected static ?string $navigationIcon = 'carbon-purchase';
 
     public static function form(Form $form): Form
     {
