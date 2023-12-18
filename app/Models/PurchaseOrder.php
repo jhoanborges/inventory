@@ -16,6 +16,10 @@ class PurchaseOrder extends Model
     use HasFactory;
     use SoftDeletes;
 
+    protected $casts = [
+        'is_approved' => 'boolean',
+    ];
+
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);

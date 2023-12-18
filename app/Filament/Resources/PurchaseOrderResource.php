@@ -14,9 +14,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\TextEntry;
-use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Actions\CreateAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\Select;
 use App\Models\Customer;
@@ -25,6 +23,10 @@ use Filament\Forms\Components\TimePicker;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\CheckboxColumn;
+use Filament\Tables\Enums\ActionsPosition;
+use Filament\Tables\Columns\ToggleColumn;
+use Filament\Notifications\Notification;
+use Filament\Notifications\Actions\Action as NotificationAction;
 
 class PurchaseOrderResource extends Resource
 {
@@ -60,41 +62,54 @@ class PurchaseOrderResource extends Resource
                 TextColumn::make('customer.name')
                     ->searchable()
                     ->sortable(),
-                CheckboxColumn::make('is_approved')
-                ->beforeStateUpdated(function ($record, $state) {
-                    // Runs before the state is saved to the database.
-                })
-                ->afterStateUpdated(function ($record, $state) {
-                    // Runs after the state is saved to the database.
-                })
-/*
-                IconColumn::make('status_id')
-                ->label('Status')
-                ->tooltip(fn (PurchaseOrder $record): string => "Currently in: {$record->status->name}")
-                    ->icon(fn (string $state): string => match ($state) {
-                        '1' => 'clarity-success-standard-solid',
-                        '2' => 'heroicon-o-clock',
-                        '3' => 'heroicon-o-check-circle',
-                        '4' => 'heroicon-o-check-circle',
-                    })
-                    ->color(fn (string $state): string => match ($state) {
-                        '3' => 'info',
-                        '2' => 'warning',
-                        '1' => 'success',
-                        default => 'gray',
-                    })
-                    */
+                IconColumn::make('is_approved')
+                    ->boolean()
+                    ->label('Status')
+                    ->trueIcon('heroicon-o-check-badge')
+                    ->falseIcon('heroicon-o-x-mark')
+
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
-                Tables\Actions\AttachAction::make(),
+                //Tables\Actions\CreateAction::make(),
+                //Tables\Actions\AttachAction::make(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-            ])
+                Action::make('Approve')
+                    ->label('Approve')
+                    ->requiresConfirmation()
+                    ->action(
+                        function ($action, PurchaseOrder $record) {
+                            if ($record->has('products')->count() <= 0 ) {
+                                // Runs before the form fields are saved to the database.
+
+$recipient = auth()->user();
+
+
+                                Notification::make()
+                                ->title('There are no products attached.')
+                                ->danger()
+                                ->duration(15000)
+                                ->body('Please, attach products to the purchase order.')
+                                ->actions([
+                                    NotificationAction::make('View Order')
+                                        ->button()
+                                        ->markAsRead()
+                                        ->url(route(  'filament.admin.resources.purchase-orders.edit',  $record->id )),
+                                ])
+                                ->sendToDatabase($recipient)
+                                ->send();
+                                $action->cancel();
+                            }
+                        }
+                    )
+
+                //->url(fn (): string => route('posts.edit', ['post' => $this->post]))
+
+            ], position: ActionsPosition::BeforeColumns)
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
